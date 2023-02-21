@@ -1,9 +1,8 @@
 from datetime import datetime
 
 import requests
-from mongoengine import Document, EmbeddedDocument, connect
-from mongoengine.fields import (DateTimeField, Document, EmbeddedDocumentField,
-                                FloatField, IntField, ListField, StringField)
+from mongoengine import Document, connect
+from mongoengine.fields import DateTimeField, Document, StringField
 
 connect('ssbw-project', host='mongo')
 
