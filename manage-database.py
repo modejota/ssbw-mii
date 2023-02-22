@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Database utilities')
     parser.add_argument('action', choices=['populate', 'backup', 'restore'], help='Action to perform')
     parser.add_argument('--file', help='Path to the file for backup or restore')
+    # Makefile's call to backup and restore will be like: make backup-datbase ARGS="--file X.json"
 
     args = parser.parse_args()
     if args.file and not args.file.endswith('.json'):
@@ -45,6 +46,7 @@ if __name__ == "__main__":
             )
             libros.append(newlibro)
         Libro.objects.insert(libros, load_bulk=False)
+
     elif args.action == 'backup':
         if args.file:
             with open(args.file, 'w') as f:
