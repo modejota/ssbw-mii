@@ -74,8 +74,8 @@ WSGI_APPLICATION = 'ssbwproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# import mongoengine
-# mongoengine.connect('ssbwproject')
+# from mongoengine import connect
+# connect('ssbwproject', host='mongo')
 
 DATABASES = {
     'default': {
