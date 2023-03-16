@@ -3,5 +3,5 @@ from libreria import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('buscar', views.buscar, name='buscar')
+    path('buscar/<str:query>', views.busqueda, name='busqueda')
 ]
