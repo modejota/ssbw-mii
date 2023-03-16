@@ -2,7 +2,6 @@ from datetime import datetime
 from mongoengine import Document
 from mongoengine.fields import DateTimeField, Document, StringField
 
-
 class Libro(Document):
     title = StringField(required=True, max_length=120)
     author = StringField(required=True, max_length=120)
