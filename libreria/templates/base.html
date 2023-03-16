@@ -18,6 +18,11 @@
         <!-- <img src="{% static 'images/favicon.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top"> -->
         Nuestra librería
       </a>
+      <form action="{% url 'buscar' %}" class="d-flex pe-4" method="POST">
+        {% csrf_token %}
+        <input name="query" class="form-control me-2" type="search" placeholder="Busca un libro" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+      </form>
     </div>
   </nav>
 
@@ -28,7 +33,7 @@
     </main>
 
   <!-- Footer de la página -->
-  <footer class="bg-light text-center fixed-bottom">
+  <footer class="bg-light text-center">
     <div class="container p-4">
       <div class="row">
         <div class="col-lg-12">
