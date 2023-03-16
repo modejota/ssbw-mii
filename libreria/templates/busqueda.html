@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+
+        <h1 class="mb-4">Resultados de la búsqueda: {{busqueda}}</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ISBN</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Autor</th>
+                </tr>
+            </thead>
+            {% for libro in libros %}
+            <tr>
+                <td>{{libro.isbn}}</td>
+                <td>{{libro.title}}</td>
+                <td>{{libro.author}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
