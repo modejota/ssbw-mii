@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'ssbwproject.wsgi.application'
 
 # Temporalmente, hasta que sepa a ciencia cierta si es mejor práctica dejarlo aqui,
 # o abrir una conexión en cada método de la vista	que lo necesite
-connect('ssbwproject', host='mongo')
+connect('ssbw-project', host='mongo')
 
 # Esta otra es la que se usa para usuarios, etc.
 # Puede que el MongoEngine se pueda integrar aquí.
