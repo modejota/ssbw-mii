@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <div class="container mt-5">
+
+    <h1 class="mb-4">Añadir libro</h1>
+    <form action="{% url 'añadir' %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+    </div>
+{% endblock %}
