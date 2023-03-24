@@ -160,7 +160,7 @@ LOGGING = {
 			'class': 'logging.FileHandler',
 			'filename': BASE_DIR / LOG_FILE,
 			'formatter': 'verbose',
-			'mode': 'w'   # sobreescribe cada vez
+			'mode': 'a'   # append to file
 			},
 
 		'console': {
