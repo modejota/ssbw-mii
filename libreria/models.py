@@ -11,3 +11,5 @@ class Libro(Document):
     image = StringField(required=True, max_length=240)
     published = DateTimeField(required=True, default=datetime.now)
     publisher = StringField(required=True, max_length=120)
+
+    # Si comento el campo 'image' deja de funcionar todo. Se ve que tiene que mapear el documento de la BD al completo para funcionar.
