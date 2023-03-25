@@ -8,8 +8,6 @@ migrate:
 	docker-compose run app python manage.py migrate
 install-requirements:
 	docker-compose run app pip install -r requirements.txt
-makemigrations:
-	docker-compose run app python manage.py makemigrations ssbwproject
 populate-database:
 	docker-compose run app python manage-database.py populate
 backup-database:
