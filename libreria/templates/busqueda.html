@@ -2,36 +2,34 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-5">
+<div class="container mt-5">
 
-        {% if libros|length != 0 %}
-        {% if busqueda != "" %}
-        <h1 class="mb-4">Resultados de la búsqueda: {{busqueda}}</h1>
-        {% endif %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">ISBN</th>
-                    <th scope="col">Título</th>
-                    <th scope="col">Autor</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            {% for libro in libros %}
+    {% if libros|length != 0 %}
+    {% if busqueda != "" %}
+    <h1 class="mb-4">Resultados de la búsqueda: {{busqueda}}</h1>
+    {% endif %}
+    <table class="table mb-4">
+        <thead>
             <tr>
-                <td>{{libro.isbn}}</td>
-                <td>{{libro.title}}</td>
-                <td>{{libro.author}}</td>
-                <td>
-                    <a href="/otra-pagina.html" class="btn btn-primary">
-                        <i class="bi bi-eye-fill"></i> Ver detalles
-                    </a>
-                </td>
+                <th scope="col">ISBN</th>
+                <th scope="col">Título</th>
+                <th scope="col">Autor</th>
+                <th scope="col"></th>
             </tr>
-            {% endfor %}
-        </table>
-        {% else %}
-        <h1 class="mb-4">No hay resultados para la búsqueda: {{busqueda}}</h1>
-        {% endif %}
-    </div>
+        </thead>
+        {% for libro in libros %}
+        <tr>
+            <td>{{libro.isbn}}</td>
+            <td>{{libro.title}}</td>
+            <td>{{libro.author}}</td>
+            <td>
+                <a href="{% url 'detalle' libro.isbn %}" class="btn btn-primary">Ver detalles</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h1 class="mb-4">No hay resultados para la búsqueda: {{busqueda}}</h1>
+    {% endif %}
+</div>
 {% endblock %}

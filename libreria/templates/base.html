@@ -22,11 +22,15 @@
         <!-- <img src="{% static 'images/favicon.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top"> -->
         Nuestra librería
       </a>
-      <form action="{% url 'buscar' %}" class="d-flex pe-4" method="POST">
-        {% csrf_token %}
-        <input name="query" class="form-control me-2" type="search" placeholder="Busca un libro" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Buscar</button>
-      </form>
+      <div class="d-flex justify-content-between me-3">
+        <form action="{% url 'buscar' %}" class="d-flex" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input name="query" class="form-control me-2" type="search" placeholder="Busca un libro" aria-label="Search" required>
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+        <a class="btn btn-outline-primary ms-2" href="{% url 'añadir' %}" role="button">Añadir libro</a>
+      </div>
+
     </div>
   </nav>
 
