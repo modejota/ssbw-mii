@@ -10,8 +10,8 @@
   {% bootstrap_css %}
   {% bootstrap_javascript %}
   {% bootstrap_messages %}
-  <link rel="icon" href="{% static 'images/favicon.png' %}">
-  <title>Nuestra librería</title>
+  <link rel="icon" href="{% static 'favicon.png' %}" type="image/png">
+  <title>Librería de SSBW</title>
 </head>
 
 <body class="d-flex flex-column vh-100">
@@ -19,8 +19,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand ps-4" href="{% url 'home' %}">
-        <!-- <img src="{% static 'images/favicon.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top"> -->
-        Nuestra librería
+        Página de inicio
       </a>
       <div class="d-flex justify-content-between me-3">
         <form action="{% url 'buscar' %}" class="d-flex" method="POST" enctype="multipart/form-data">
