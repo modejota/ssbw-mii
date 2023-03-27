@@ -12,7 +12,6 @@ class Libro(Document):
     genre = StringField(required=True, max_length=120)
     description = StringField(required=True, max_length=240)
     isbn = StringField(required=True, max_length=13, unique=True)
-    image = StringField(required=True, max_length=240)
     published = DateTimeField(required=True, default=datetime.now)
     publisher = StringField(required=True, max_length=120)
 
@@ -40,7 +39,6 @@ if __name__ == "__main__":
                 genre=libro['genre'],
                 description=libro['description'],
                 isbn=libro['isbn'],
-                image=libro['image'],
                 published=libro['published'],
                 publisher=libro['publisher']
             )
