@@ -118,6 +118,7 @@ def eliminar(request, id):
             logger.info("Eliminando: %s", id)
             messages.success(request, 'El libro ha sido eliminado correctamente.')
     else:
+        # Podría mostrarse como error, pero es más bien una advertencia.
         logger.warning('Intento de eliminar libro %s con GET.', id)
         messages.warning(request, 'Para eliminar libros utilice el apartado de la web correspondiente.')
     return redirect('home')
