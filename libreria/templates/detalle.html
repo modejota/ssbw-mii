@@ -31,6 +31,7 @@
             </div>
         </div>
     </div>
+    {% if user.is_staff %}
     <div class="row mt-4 mb-4">
         <div class="text-center">
             <a class="btn btn-outline-primary d-inline-block mx-auto me-2" href="{% url 'editar' isbn %}">Modificar
@@ -62,6 +63,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 
 {% else %}
