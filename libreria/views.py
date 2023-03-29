@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 from libreria.models import Libro
 from libreria.forms import FormularioLibro
 from datetime import timedelta
@@ -138,3 +139,26 @@ def eliminar(request, id):
         logger.warning('Intento de eliminar libro %s con GET.', id)
         messages.warning(request, 'Para eliminar libros utilice el apartado de la web correspondiente.')
     return redirect('home')
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            # El formulario ya comprueba que las contraseñas coinciden, pero aseguramos por si se manipula el HTML/JS.
+            raw_password = form.cleaned_data.get('password1')
+            confirm_password = form.cleaned_data.get('password2')
+            if raw_password != confirm_password:
+                logger.error('Las contraseñas no coinciden al intentar registrar usuario %s.', username)
+                messages.error(request, 'Las contraseñas no coinciden.')
+                return redirect('signup')
+
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            logger.info('Usuario %s registrado.', username)
+            messages.success(request, 'Usuario registrado correctamente. Se ha iniciado sesión automáticamente.')
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
