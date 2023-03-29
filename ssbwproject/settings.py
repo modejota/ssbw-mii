@@ -75,8 +75,7 @@ WSGI_APPLICATION = 'ssbwproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# Temporalmente, hasta que sepa a ciencia cierta si es mejor práctica dejarlo aqui,
-# o abrir una conexión en cada método de la vista	que lo necesite
+# Conexión con la BD de Mongo al lanzar aplicación
 connect('ssbw-project', host='mongo')
 
 # Esta otra es la que se usa para usuarios, etc.
@@ -107,6 +106,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Authentication redirects
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 
 # Internationalization

@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 from libreria.models import Libro
 from libreria.forms import FormularioLibro
 from datetime import timedelta
@@ -24,6 +26,11 @@ def buscar(request):
     return render(request, 'busqueda.html', context=context)
 
 def aniadir(request):
+    if not request.user.is_staff:
+        logger.error("Se ha intentado acceder a la página de añadir libro sin permisos.")
+        messages.error(request, 'No tiene permisos para acceder a operaciones de modificación sobre la base de datos. Por favor, inicie sesión como miembro del staff.')
+        return redirect('login')    # Podría redirigir a home en su lugar
+
     formulario = FormularioLibro()
     if request.method == 'POST':
         formulario = FormularioLibro(request.POST)
@@ -63,6 +70,11 @@ def detalle(request, id):
     return render(request, 'detalle.html', context=context)
 
 def editar(request, id):
+    if not request.user.is_staff:
+        logger.error("Se ha intentado acceder a la página de editar libro sin permisos.")
+        messages.error(request, 'No tiene permisos para acceder a operaciones de modificación sobre la base de datos. Por favor, inicie sesión como miembro del staff.')
+        return redirect('login')    # Podría redirigir a home en su lugar
+
     formulario = FormularioLibro()
     if request.method == 'POST':
         formulario = FormularioLibro(request.POST)
@@ -108,6 +120,11 @@ def editar(request, id):
     return render(request, 'editar.html', context=context)
 
 def eliminar(request, id):
+    if not request.user.is_staff:
+        logger.error("Se ha intentado acceder a la página de eliminar libro sin permisos.")
+        messages.error(request, 'No tiene permisos para acceder a operaciones de modificación sobre la base de datos. Por favor, inicie sesión como miembro del staff.')
+        return redirect('login')    # Podría redirigir a home en su lugar
+
     # Django no admite DELETE en formularios, por lo que usamos POST. No usamos GET porque se podría eliminar un libro sin querer haciendo uso de URL.
     if request.method == 'POST':
         docs_deleted = Libro.objects(isbn=str(id)).delete()
@@ -122,3 +139,31 @@ def eliminar(request, id):
         logger.warning('Intento de eliminar libro %s con GET.', id)
         messages.warning(request, 'Para eliminar libros utilice el apartado de la web correspondiente.')
     return redirect('home')
+
+def signup(request):
+    if request.user.is_authenticated:
+        logger.warning('Intento de registro de usuario ya autenticado.')
+        messages.warning(request, 'Ya ha iniciado sesión. No es necesario registrarse.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            # El formulario ya comprueba que las contraseñas coinciden, pero aseguramos por si se manipula el HTML/JS.
+            raw_password = form.cleaned_data.get('password1')
+            confirm_password = form.cleaned_data.get('password2')
+            if raw_password != confirm_password:
+                logger.error('Las contraseñas no coinciden al intentar registrar usuario %s.', username)
+                messages.error(request, 'Las contraseñas no coinciden.')
+                return redirect('signup')
+
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            logger.info('Usuario %s registrado.', username)
+            messages.success(request, 'Usuario registrado correctamente. Se ha iniciado sesión automáticamente.')
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
