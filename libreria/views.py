@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from libreria.models import Libro
 from libreria.forms import FormularioLibro
 from datetime import timedelta
@@ -167,3 +167,28 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+def my_login(request):
+    if request.user.is_authenticated:
+        logger.warning('Intento de inicio de sesión de usuario ya autenticado.')
+        messages.warning(request, 'Ya ha iniciado sesión. No es necesario volver a hacerlo.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=raw_password)
+            if user is not None:
+                login(request, user)
+                logger.info('Usuario %s inició sesión.', username)
+                messages.success(request, 'Inicio de sesión correcto.')
+                return redirect('home')
+            else:
+                logger.warning('Usuario %s no pudo iniciar sesión.', username)
+                messages.error(request, 'Usuario o contraseña incorrectos.')
+                return redirect('login')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
