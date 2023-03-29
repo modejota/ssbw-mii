@@ -141,6 +141,11 @@ def eliminar(request, id):
     return redirect('home')
 
 def signup(request):
+    if request.user.is_authenticated:
+        logger.warning('Intento de registro de usuario ya autenticado.')
+        messages.warning(request, 'Ya ha iniciado sesión. No es necesario registrarse.')
+        return redirect('home')
+
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
