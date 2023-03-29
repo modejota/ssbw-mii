@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import user_passes_test
 from libreria.models import Libro
 from libreria.forms import FormularioLibro
 from datetime import timedelta
@@ -24,6 +25,11 @@ def buscar(request):
     return render(request, 'busqueda.html', context=context)
 
 def aniadir(request):
+    if not request.user.is_staff:
+        logger.error("Se ha intentado acceder a la página de añadir libro sin permisos.")
+        messages.error(request, 'No tiene permisos para acceder a operaciones de modificación sobre la base de datos. Por favor, inicie sesión como miembro del staff.')
+        return redirect('login')    # Podría redirigir a home en su lugar
+
     formulario = FormularioLibro()
     if request.method == 'POST':
         formulario = FormularioLibro(request.POST)
@@ -63,6 +69,11 @@ def detalle(request, id):
     return render(request, 'detalle.html', context=context)
 
 def editar(request, id):
+    if not request.user.is_staff:
+        logger.error("Se ha intentado acceder a la página de editar libro sin permisos.")
+        messages.error(request, 'No tiene permisos para acceder a operaciones de modificación sobre la base de datos. Por favor, inicie sesión como miembro del staff.')
+        return redirect('login')    # Podría redirigir a home en su lugar
+
     formulario = FormularioLibro()
     if request.method == 'POST':
         formulario = FormularioLibro(request.POST)
@@ -108,6 +119,11 @@ def editar(request, id):
     return render(request, 'editar.html', context=context)
 
 def eliminar(request, id):
+    if not request.user.is_staff:
+        logger.error("Se ha intentado acceder a la página de eliminar libro sin permisos.")
+        messages.error(request, 'No tiene permisos para acceder a operaciones de modificación sobre la base de datos. Por favor, inicie sesión como miembro del staff.')
+        return redirect('login')    # Podría redirigir a home en su lugar
+
     # Django no admite DELETE en formularios, por lo que usamos POST. No usamos GET porque se podría eliminar un libro sin querer haciendo uso de URL.
     if request.method == 'POST':
         docs_deleted = Libro.objects(isbn=str(id)).delete()
