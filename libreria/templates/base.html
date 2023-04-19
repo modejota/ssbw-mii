@@ -58,6 +58,7 @@
         {% if user.is_staff %}
         <a class="btn btn-outline-primary ms-2" href="{% url 'añadir' %}" role="button">Añadir libro</a>
         {% endif %}
+        <a id="darkmode-button" class="btn btn-outline-secondary"></a>
       </div>
 
     </div>
@@ -83,7 +84,7 @@
   {% block scripts %}
   {% endblock %}
   <script>
-    document.querySelector("#your-darkmode-button-id").onclick = function (e) {
+    document.querySelector("#darkmode-button").onclick = function (e) {
       darkmode.toggleDarkMode();
     }
   </script>
