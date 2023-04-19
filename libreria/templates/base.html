@@ -47,11 +47,11 @@
 
       </div>
       <div class="d-flex justify-content-between me-3">
-        <form action="{% url 'buscar' %}" class="d-flex" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'buscar' %}" class="d-flex" method="POST" enctype="multipart/form-data" id="formulario_buscar_libros">
           {% csrf_token %}
-          <input name="query" class="form-control me-2" type="search" placeholder="Busca un libro" aria-label="Search"
+          <input name="query" id='input_buscador' class="form-control me-2" type="search" placeholder="Busca un libro" aria-label="Search"
             required>
-          <button class="btn btn-outline-success" type="submit">Buscar</button>
+          <button class="btn btn-outline-success" id="boton_buscar_libro" type="submit">Buscar</button>
         </form>
         {% if user.is_staff %}
         <a class="btn btn-outline-primary ms-2" href="{% url 'añadir' %}" role="button">Añadir libro</a>
@@ -77,6 +77,10 @@
       </div>
     </div>
   </footer>
+
+  {% block scripts %}
+  {% endblock %}
+
 </body>
 
 </html>
