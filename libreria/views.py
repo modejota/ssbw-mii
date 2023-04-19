@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -9,14 +10,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 def home(request):
-    # Por ahora he puesto de página de inicio el listado de todos los libros.
+    # Optamos por mostrar directamente los libros en la página principal.
     return buscar(request)
 
 def buscar(request):
     query = request.POST.get('query')
     if query is None:   # Por si se quita el required en HTML maliciosamente.
         query = ""
-    libros = Libro.objects.filter(title__icontains=query)
+    libros = Libro.objects.filter(title__icontains=query).only("isbn", "title", "author")   # Sólo se muestran los campos necesarios, ahorrando ancho de banda.
     if query != "":     # No mostrar el mensaje si no se ha buscado nada. (Cuando se viene de home)
         logger.info("Buscando: %s", query)
     context = {
@@ -192,3 +193,13 @@ def my_login(request):
     else:
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
+
+def libros_api(request):
+    search_query = request.GET.get('search', '')
+    if search_query is None:
+        search_query = ""
+    libros = Libro.objects(title__icontains=search_query).only("isbn", "title", "author") # Sólo se muestran los campos necesarios, ahorrando ancho de banda.
+    data = [{'title': libro.title, 'author': libro.author, 'isbn': libro.isbn} for libro in libros]
+    if search_query != "":
+        logger.info("Buscando: %s", search_query, "via API")
+    return JsonResponse({'books': data})
