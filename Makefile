@@ -2,8 +2,8 @@ build:
 	docker-compose build
 up:
 	docker-compose up --detach
-down:
-	docker-compose down
+stop:
+	docker-compose stop
 migrate:
 	docker-compose run app python manage.py migrate
 install-requirements:
