@@ -34,9 +34,9 @@
     {% if user.is_staff %}
     <div class="row mt-4 mb-4">
         <div class="text-center">
-            <a class="btn btn-outline-primary d-inline-block mx-auto me-2" href="{% url 'editar' isbn %}">Modificar
+            <a class="btn btn-primary d-inline-block mx-auto me-2" href="{% url 'editar' isbn %}">Modificar
                 libro</a>
-            <button class="btn btn-outline-danger d-inline-block mx-auto" data-bs-toggle="modal"
+            <button class="btn btn-danger d-inline-block mx-auto" data-bs-toggle="modal"
                 data-bs-target="#eliminarLibroModal">Eliminar libro</button>
         </div>
 
@@ -47,13 +47,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="eliminarLibroModalLabel">Eliminar libro</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         ¿Está seguro de que desea eliminar este libro? Esta acción no se puede deshacer.
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <form action="{% url 'eliminar' isbn %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Eliminar</button>

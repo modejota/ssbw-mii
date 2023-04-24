@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5" id="container_tabla_libros">
 
     {% if libros|length != 0 %}
     {% if busqueda != "" %}
     <h1 class="mb-4">Resultados de la búsqueda: {{busqueda}}</h1>
     {% endif %}
-    <table class="table mb-4">
+    <table class="table mb-4" id='tabla_libros' style="table-layout: fixed;">
         <thead>
             <tr>
                 <th scope="col">ISBN</th>
@@ -29,7 +29,12 @@
         {% endfor %}
     </table>
     {% else %}
-    <h1 class="mb-4">No hay resultados para la búsqueda: {{busqueda}}</h1>
+    <h1 class="mb-4" id="no_resultados">No hay resultados para la búsqueda: {{busqueda}}</h1>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"></script>
+    <script src="{% static 'js/reactive-search.js' %}"></script>
 {% endblock %}
