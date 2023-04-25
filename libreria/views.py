@@ -194,7 +194,7 @@ def my_login(request):
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
 
-def libros_api(request):
+def busqueda_reactiva(request):
     search_query = request.GET.get('search', '')
     if search_query is None:
         search_query = ""
