@@ -224,34 +224,42 @@ class LibrosAPI(APIView):
         logger.info("Listando libros via API")
         return Response(serializer.data)
 
+    # Cuando se crea recurso no se debe pasar el ID deseado en el URL.
+    # POST no es idempotente, por lo que no crearía un nuevo libro si se repite la petición.
+    def post(self, request):
+        serializer = LibroSerializer(data=request.data)
+        if serializer.is_valid():
+            libro = Libro.objects.get(isbn=request.data.get('isbn'))
+            if libro is not None:
+                logger.warning("Intento de POST libro con ISBN %s ya existente via API", request.data.get('isbn'))
+                return Response({'error': 'Ya existe un libro con ese ISBN.'}, status=status.HTTP_409_CONFLICT)
+            serializer.save()
+            logger.info("POST libro con ISBN %s via API", serializer.isbn)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class LibroAPI(APIView):
 
     def get(self, request, isbn):
         libro = get_libro_or_404(isbn)
         serializer = LibroSerializer(libro)
-        logger.info("Listando libro con ISBN %s via API", isbn)
+        logger.info("GET libro con ISBN %s via API", isbn)
         return Response(serializer.data)
 
-
-    def post(self, request, isbn):
-        serializer = LibroSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            logger.info("Creando libro con ISBN %s via API", isbn)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+    # Cuando se actualiza recurso se debe pasar el ID deseado en el URL.
+    # Es idempotente, por lo que varias ejecuciones darán el mismo resultado.
     def put(self, request, isbn):
-        serializer = LibroSerializer(data=request.data)
+        libro = get_libro_or_404(isbn)
+        serializer = LibroSerializer(libro, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            logger.info("Actualizando libro con ISBN %s via API", isbn)
+            logger.info("PUT libro con ISBN %s via API", isbn)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # Cuando se elimina recurso se debe pasar el ID deseado en el URL
     def delete(self, request, isbn):
         libro = get_libro_or_404(isbn)
         libro.delete()
-        logger.info("Eliminando libro con ISBN %s via API", isbn)
+        logger.info("DELETE libro con ISBN %s via API", isbn)
         return Response(status=status.HTTP_204_NO_CONTENT)
