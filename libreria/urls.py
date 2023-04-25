@@ -10,5 +10,5 @@ urlpatterns = [
     path('eliminar/<int:id>', views.eliminar, name='eliminar'),
     path('accounts/login/', views.my_login, name='login'),
     path('accounts/signup/', views.signup, name='signup'),
-    path('api/libros/', views.libros_api, name='libro-api'),
+    path('busqueda_reactiva/libros/', views.busqueda_reactiva, name='libro-busqueda_reactiva'),
 ]
