@@ -30,28 +30,49 @@ inputFieldBuscadorLibros.addEventListener('input', function () {
                     tabla.classList.add("table", "mb-4")
                     tabla.style.tableLayout = "fixed";  // Siempre mismo ancho de columnas, independientemente del contenido
                     container.appendChild(tabla);
+
+                    // Creamos el cuerpo (tbody) para la tabla
+                    var cuerpoTabla = document.createElement("tbody");
+                    tabla.appendChild(cuerpoTabla);
                 }
                 // Actualizamos referencia a la tabla y la poblamos
                 tablaResultadoLibros = document.getElementById("tabla_libros");
-                tablaResultadoLibros.innerHTML = "";
-                tablaResultadoLibros.innerHTML += `
+                tablaResultadoLibros.innerHTML = `
                     <thead>
                         <tr>
                             <th scope="col">ISBN</th>
                             <th scope="col">Título</th>
                             <th scope="col">Autor</th>
                             <th scope="col"></th>
-                            </tr>
-                    </thead>`
-                libros.forEach(function (libro) {
-                    tablaResultadoLibros.innerHTML += `
-                        <tr>
-                            <td>${libro.isbn}</td>
-                            <td>${libro.title}</td>
-                            <td>${libro.author}</td>
-                            <td><a href="detalle/${libro.isbn}" class="btn btn-primary">Ver detalles</a></td>
                         </tr>
-                    `;
+                    </thead>`;
+                // Seleccionamos el cuerpo de la tabla
+                var cuerpoTabla = tablaResultadoLibros.querySelector("tbody");
+
+                libros.forEach(function (libro) {
+                    // Creamos una fila para el cuerpo
+                    var fila = document.createElement("tr");
+                    // Creamos celdas para la fila
+                    var celdaISBN = document.createElement("td");
+                    celdaISBN.innerHTML = libro.isbn;
+                    var celdaTitulo = document.createElement("td");
+                    celdaTitulo.innerHTML = libro.title;
+                    var celdaAutor = document.createElement("td");
+                    celdaAutor.innerHTML = libro.author;
+                    var celdaBoton = document.createElement("td");
+                    var botonDetalle = document.createElement("a");
+                    botonDetalle.href = "detalle/" + libro.isbn;
+                    botonDetalle.classList.add("btn", "btn-primary");
+                    botonDetalle.innerHTML = "Ver detalles";
+                    celdaBoton.appendChild(botonDetalle);
+
+                    // Agregamos las celdas a la fila
+                    fila.appendChild(celdaISBN);
+                    fila.appendChild(celdaTitulo);
+                    fila.appendChild(celdaAutor);
+                    fila.appendChild(celdaBoton);
+                    // Agregamos la fila al cuerpo de la tabla
+                    cuerpoTabla.appendChild(fila);
                 });
             } else {
                 // Si no hay resultados, vacio la tabla, creo el mensaje correspondiente y lo muestro.
