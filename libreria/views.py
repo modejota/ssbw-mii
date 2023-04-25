@@ -224,6 +224,15 @@ class LibrosAPI(APIView):
         logger.info("Listando libros via API")
         return Response(serializer.data)
 
+
+class LibroAPI(APIView):
+
+    def get(self, request, isbn):
+        libro = get_libro_or_404(isbn)
+        serializer = LibroSerializer(libro)
+        logger.info("GET libro con ISBN %s via API", isbn)
+        return Response(serializer.data)
+
     # Cuando se crea recurso no se debe pasar el ID deseado en el URL.
     # POST no es idempotente, por lo que no crearía un nuevo libro si se repite la petición.
     def post(self, request):
@@ -237,14 +246,6 @@ class LibrosAPI(APIView):
             logger.info("POST libro con ISBN %s via API", serializer.isbn)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LibroAPI(APIView):
-
-    def get(self, request, isbn):
-        libro = get_libro_or_404(isbn)
-        serializer = LibroSerializer(libro)
-        logger.info("GET libro con ISBN %s via API", isbn)
-        return Response(serializer.data)
 
     # Cuando se actualiza recurso se debe pasar el ID deseado en el URL.
     # Es idempotente, por lo que varias ejecuciones darán el mismo resultado.

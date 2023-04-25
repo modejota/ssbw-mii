@@ -11,6 +11,7 @@ urlpatterns = [
     path('accounts/login/', views.my_login, name='login'),
     path('accounts/signup/', views.signup, name='signup'),
     path('busqueda_reactiva/libros/', views.busqueda_reactiva, name='libro-busqueda-reactiva'),
-    path('api/libros/', views.LibrosAPI.as_view(), name='API-libros-y-crear'),
-    path('api/libros/<str:isbn>', views.LibroAPI.as_view(), name='API-manejar-libro-individual'),
+    path('api/libros/', views.LibrosAPI.as_view(), name='API-libros'),
+    path('api/libro/', views.LibroAPI.as_view(), name='API-crear-libro-individual'),
+    path('api/libro/<str:isbn>', views.LibroAPI.as_view(), name='API-manejar-libro-individual'),
 ]
