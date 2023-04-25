@@ -12,5 +12,5 @@ urlpatterns = [
     path('accounts/signup/', views.signup, name='signup'),
     path('busqueda_reactiva/libros/', views.busqueda_reactiva, name='libro-busqueda-reactiva'),
     path('api/libros/', views.LibrosAPI.as_view(), name='API-libros'),
-    path('api/libro/<str:isbn>', views.LibroAPI.as_view(), name='API-libro-individual'),
+    path('api/libro/<str:isbn>', views.LibroAPI.as_view(), name='API-libro-individual'),    # Todos los verbos HTTP, ya decide el método de la clase
 ]

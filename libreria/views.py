@@ -234,10 +234,24 @@ class LibroAPI(APIView):
 
 
     def post(self, request, isbn):
-        pass
+        serializer = LibroSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            logger.info("Creando libro con ISBN %s via API", isbn)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def put(self, request, isbn):
-        pass
+        serializer = LibroSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            logger.info("Actualizando libro con ISBN %s via API", isbn)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, isbn):
-        pass
+        libro = get_libro_or_404(isbn)
+        libro.delete()
+        logger.info("Eliminando libro con ISBN %s via API", isbn)
+        return Response(status=status.HTTP_204_NO_CONTENT)
