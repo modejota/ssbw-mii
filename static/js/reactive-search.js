@@ -30,10 +30,6 @@ inputFieldBuscadorLibros.addEventListener('input', function () {
                     tabla.classList.add("table", "mb-4")
                     tabla.style.tableLayout = "fixed";  // Siempre mismo ancho de columnas, independientemente del contenido
                     container.appendChild(tabla);
-
-                    // Creamos el cuerpo (tbody) para la tabla
-                    var cuerpoTabla = document.createElement("tbody");
-                    tabla.appendChild(cuerpoTabla);
                 }
                 // Actualizamos referencia a la tabla y la poblamos
                 tablaResultadoLibros = document.getElementById("tabla_libros");
@@ -46,21 +42,20 @@ inputFieldBuscadorLibros.addEventListener('input', function () {
                             <th scope="col"></th>
                         </tr>
                     </thead>`;
-                // Seleccionamos el cuerpo de la tabla
-                var cuerpoTabla = tablaResultadoLibros.querySelector("tbody");
-
+                // Creamos el cuerpo (tbody) para la tabla
+                let cuerpoTabla = document.createElement("tbody");
                 libros.forEach(function (libro) {
                     // Creamos una fila para el cuerpo
-                    var fila = document.createElement("tr");
+                    let fila = document.createElement("tr");
                     // Creamos celdas para la fila
-                    var celdaISBN = document.createElement("td");
+                    let celdaISBN = document.createElement("td");
                     celdaISBN.innerHTML = libro.isbn;
-                    var celdaTitulo = document.createElement("td");
+                    let celdaTitulo = document.createElement("td");
                     celdaTitulo.innerHTML = libro.title;
-                    var celdaAutor = document.createElement("td");
+                    let celdaAutor = document.createElement("td");
                     celdaAutor.innerHTML = libro.author;
-                    var celdaBoton = document.createElement("td");
-                    var botonDetalle = document.createElement("a");
+                    let celdaBoton = document.createElement("td");
+                    let botonDetalle = document.createElement("a");
                     botonDetalle.href = "detalle/" + libro.isbn;
                     botonDetalle.classList.add("btn", "btn-primary");
                     botonDetalle.innerHTML = "Ver detalles";
@@ -74,13 +69,14 @@ inputFieldBuscadorLibros.addEventListener('input', function () {
                     // Agregamos la fila al cuerpo de la tabla
                     cuerpoTabla.appendChild(fila);
                 });
+                tablaResultadoLibros.appendChild(cuerpoTabla);
             } else {
                 // Si no hay resultados, vacio la tabla, creo el mensaje correspondiente y lo muestro.
                 // Si ya tenemos un mensaje de "no hay resultados" no lo creamos de nuevo, sino que lo actualizamos
                 tablaResultadoLibros.innerHTML = "";
                 const container = document.getElementById("container_tabla_libros");
                 const h1 = document.getElementById("no_resultados");
-                if(!h1) {
+                if (!h1) {
                     const h1Nuevo = document.createElement("h1");
                     h1Nuevo.id = "no_resultados";
                     h1Nuevo.classList.add("mb-4")
