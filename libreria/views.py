@@ -6,6 +6,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from libreria.models import Libro
 from libreria.forms import FormularioLibro
 from datetime import timedelta
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 import logging
 logger = logging.getLogger(__name__)
 
@@ -203,3 +206,38 @@ def busqueda_reactiva(request):
     if search_query != "":
         logger.info("Buscando: %s", search_query, "via API")
     return JsonResponse({'books': data})
+
+########## API ##########
+from libreria.serializer import LibroSerializer
+
+def get_libro_or_404(isbn):
+    try:
+        return Libro.objects.get(isbn=isbn)
+    except Libro.DoesNotExist:
+        return Response({'error': 'Libro no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+class LibrosAPI(APIView):
+
+    def get(self, request):
+        libros = Libro.objects.all()
+        serializer = LibroSerializer(libros, many=True)
+        logger.info("Listando libros via API")
+        return Response(serializer.data)
+
+class LibroAPI(APIView):
+
+    def get(self, request, isbn):
+        libro = get_libro_or_404(isbn)
+        serializer = LibroSerializer(libro)
+        logger.info("Listando libro con ISBN %s via API", isbn)
+        return Response(serializer.data)
+
+
+    def post(self, request, isbn):
+        pass
+
+    def put(self, request, isbn):
+        pass
+
+    def delete(self, request, isbn):
+        pass
