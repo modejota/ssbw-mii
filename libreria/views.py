@@ -238,12 +238,14 @@ class LibroAPI(APIView):
     def post(self, request):
         serializer = LibroSerializer(data=request.data)
         if serializer.is_valid():
-            libro = Libro.objects.get(isbn=request.data.get('isbn'))
-            if libro is not None:
-                logger.warning("Intento de POST libro con ISBN %s ya existente via API", request.data.get('isbn'))
+            try:    # Esto se tiene que poder reimplementar seguro. No me gusta dejar un PASS
+                Libro.objects.get(isbn=serializer.validated_data.get('isbn'))
+                logger.warning("Intento de POST libro con ISBN %s ya existente via API", serializer.validated_data.get('isbn'))
                 return Response({'error': 'Ya existe un libro con ese ISBN.'}, status=status.HTTP_409_CONFLICT)
+            except Libro.DoesNotExist:
+                pass
             serializer.save()
-            logger.info("POST libro con ISBN %s via API", serializer.isbn)
+            logger.info("POST libro con ISBN %s via API", serializer.validated_data.get('isbn'))
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
