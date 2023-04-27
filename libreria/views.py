@@ -42,7 +42,8 @@ def aniadir(request):
                 genre=formulario.cleaned_data['genre'],
                 description=formulario.cleaned_data['description'],
                 isbn=formulario.cleaned_data['isbn'],
-                published=formulario.cleaned_data['published'],
+                published=formulario.cleaned_data['published']+timedelta(days=1),
+                # Suma un día porque mongoengine lo guarda con un día menos al tener en cuenta la hora 00:00:00 según ISO 8601 y el navegador ignorarlo.
                 publisher=formulario.cleaned_data['publisher'],
             )
             try:    # Si el ISBN ya existe, no se añade. Notificamos del estado al usuario.
@@ -52,7 +53,7 @@ def aniadir(request):
             except:
                 logger.warning("No se ha podido añadir el libro con isbn: %s", libro.isbn)
                 messages.error(request, 'Ha ocurrido un error al añadir el libro.')
-            return redirect('aniadir')
+            return redirect('añadir')
 
     context = {
         'form': formulario
