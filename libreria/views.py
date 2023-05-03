@@ -6,6 +6,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from libreria.models import Libro
 from libreria.forms import FormularioLibro
 from datetime import timedelta
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 import logging
 logger = logging.getLogger(__name__)
 
@@ -195,7 +198,7 @@ def my_login(request):
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
 
-def libros_api(request):
+def busqueda_reactiva(request):
     search_query = request.GET.get('search', '')
     if search_query is None:
         search_query = ""
@@ -204,3 +207,63 @@ def libros_api(request):
     if search_query != "":
         logger.info("Buscando: %s", search_query, "via API")
     return JsonResponse({'books': data})
+
+########## API ##########
+from libreria.serializer import LibroSerializer
+
+def get_libro_or_404(isbn):
+    try:
+        return Libro.objects.get(isbn=isbn)
+    except Libro.DoesNotExist:
+        return Response({'error': 'Libro no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+class LibrosAPI(APIView):
+
+    def get(self, request):
+        libros = Libro.objects.all()
+        serializer = LibroSerializer(libros, many=True)
+        logger.info("Listando libros via API")
+        return Response(serializer.data)
+
+
+class LibroAPI(APIView):
+
+    def get(self, request, isbn):
+        libro = get_libro_or_404(isbn)
+        serializer = LibroSerializer(libro)
+        logger.info("GET libro con ISBN %s via API", isbn)
+        return Response(serializer.data)
+
+    # Cuando se crea recurso no se debe pasar el ID deseado en el URL.
+    # POST no es idempotente, por lo que no crearía un nuevo libro si se repite la petición.
+    def post(self, request):
+        serializer = LibroSerializer(data=request.data)
+        if serializer.is_valid():
+            try:    # Esto se tiene que poder reimplementar seguro. No me gusta dejar un PASS
+                Libro.objects.get(isbn=serializer.validated_data.get('isbn'))
+                logger.warning("Intento de POST libro con ISBN %s ya existente via API", serializer.validated_data.get('isbn'))
+                return Response({'error': 'Ya existe un libro con ese ISBN.'}, status=status.HTTP_409_CONFLICT)
+            except Libro.DoesNotExist:
+                pass
+            serializer.save()
+            logger.info("POST libro con ISBN %s via API", serializer.validated_data.get('isbn'))
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Cuando se actualiza recurso se debe pasar el ID deseado en el URL.
+    # Es idempotente, por lo que varias ejecuciones darán el mismo resultado.
+    def put(self, request, isbn):
+        libro = get_libro_or_404(isbn)
+        serializer = LibroSerializer(libro, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            logger.info("PUT libro con ISBN %s via API", isbn)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Cuando se elimina recurso se debe pasar el ID deseado en el URL
+    def delete(self, request, isbn):
+        libro = get_libro_or_404(isbn)
+        libro.delete()
+        logger.info("DELETE libro con ISBN %s via API", isbn)
+        return Response(status=status.HTTP_204_NO_CONTENT)

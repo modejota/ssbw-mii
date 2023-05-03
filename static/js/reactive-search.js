@@ -13,7 +13,7 @@ if (botonBuscadorLibros)
     botonBuscadorLibros.remove()
 
 inputFieldBuscadorLibros.addEventListener('input', function () {
-    axios.get('/api/libros?search=' + inputFieldBuscadorLibros.value)
+    axios.get('/busqueda_reactiva/libros?search=' + inputFieldBuscadorLibros.value)
         .then(function (response) {
             // Eliminamos posible mensaje de "no hay resultados" que sí viniera del formulario de búsqueda desde otra página
             const h1 = document.getElementById("no_resultados");
