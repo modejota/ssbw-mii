@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -29,37 +30,34 @@ const TableHeader = () => {
   return (
     <TableHead>
         <TableRow>
-            <StyledTableCell>Task</StyledTableCell>
-            <StyledTableCell align='right'>Status</StyledTableCell>
+            <StyledTableCell align='center'>Task</StyledTableCell>
+            <StyledTableCell align='center'>Status</StyledTableCell>
+            <StyledTableCell align='center'></StyledTableCell>
         </TableRow>
     </TableHead>
   );
 };
 
-const MyTableBody = () => {
-  return (
-    <TableBody>
-        <StyledTableRow key={1}>
-            <StyledTableCell component="th" scope="row">Task 1</StyledTableCell>
-            <StyledTableCell align='right'>Done</StyledTableCell>
-        </StyledTableRow>
-        <StyledTableRow key={2}>
-            <StyledTableCell component="th" scope="row">Task 2</StyledTableCell>
-            <StyledTableCell align='right'>Done</StyledTableCell>
-        </StyledTableRow>
-        <StyledTableRow key={3}>
-            <StyledTableCell component="th" scope="row">Task 3</StyledTableCell>
-            <StyledTableCell align='right'>Not Done</StyledTableCell>
-        </StyledTableRow>
-    </TableBody>
-  );
+const MyTableBody = ({tasks, handleDelete}) => {
+  const rows = tasks.map((row, index) => {
+    return (
+      <StyledTableRow key={index}>
+        <StyledTableCell component="th" scope="row" align='center'>{row.title}</StyledTableCell>
+        <StyledTableCell align="center">{row.status}</StyledTableCell>
+        <StyledTableCell align="center">
+          <Button variant='contained' color='primary' size='small' onClick={() => handleDelete(index)}>Delete</Button>
+        </StyledTableCell>
+      </StyledTableRow>
+    );
+  });
+  return <TableBody>{rows}</TableBody>
 };
 
-const TasksTable = () => {
+const TasksTable = ({tasks, handleDelete}) => {
     return (
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHeader />
-        <MyTableBody />
+        <MyTableBody tasks={tasks} handleDelete={handleDelete}/>
       </Table>
     );
 }
