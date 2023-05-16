@@ -1,4 +1,5 @@
 import TasksTable from './components/TasksTable'
+import Dogs from './components/Dogs';
 
 import TableContainer from '@mui/material/TableContainer';
 import Container from '@mui/material/Container';
@@ -18,6 +19,24 @@ const tasks_init = [
 function App() {
 
   const [tasks, setTasks] = useState(tasks_init)
+  const [textFieldValue, setTextFieldValue] = useState('')
+
+  const addTask = () => {
+    setTasks([...tasks, { title: textFieldValue, status: 'Incomplete' }])
+    setTextFieldValue('')
+  }
+
+  const handleTextFieldChange = (event) => {
+    setTextFieldValue(event.target.value)
+  }
+
+  const changeTaskStatus = (index) => {
+    setTasks(prevTasks => {
+      const newTasks = [...prevTasks];
+      newTasks[index].status = newTasks[index].status === 'Complete' ? 'Incomplete' : 'Complete';
+      return newTasks;
+    });
+  }
 
   const deleteTask = (index) => {
     setTasks(tasks.filter((task, i) => i !== index))
@@ -25,8 +44,10 @@ function App() {
 
   return (
     <Container maxWidth="m">
-      <TableContainer component={Paper}>
-        <TasksTable tasks={tasks} handleDelete={deleteTask}/>
+      <Dogs />
+      <TableContainer component={Paper} style={{ marginTop: '3vh' }}>
+        <TasksTable tasks={tasks} handleDelete={deleteTask} changeTaskStatus={changeTaskStatus} handleAdd={addTask}
+          textFieldValue={textFieldValue} handleTextFieldChange={handleTextFieldChange} />
       </TableContainer>
     </Container>
   )
