@@ -46,6 +46,14 @@
   max-width: 100%;
 }
 
+.mygrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(25%, auto));
+  width: var(--max-width);
+  max-width: 100%;
+  text-align: center;
+}
+
 .card {
   padding: 1rem 1.2rem;
   border-radius: var(--border-radius);
