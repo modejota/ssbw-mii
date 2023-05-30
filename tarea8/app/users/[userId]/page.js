@@ -1,5 +1,5 @@
-import getUser from "@/lib/getUser"
-import getUserPosts from "@/lib/getUserPosts"
+import getUser from "../../../lib/getUser"
+import getUserPosts from "../../../lib/getUserPosts"
 import Link from "next/link"
 import { Suspense } from "react"
 import UserPosts from "./components/UserPosts"
